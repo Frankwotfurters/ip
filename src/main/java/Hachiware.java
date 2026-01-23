@@ -65,7 +65,7 @@ public class Hachiware {
                 Task task = new Event(desc, from, to);
                 taskList.add(task);
                 System.out.println("Added: " + task.toString());
-                System.out.println("Now there are " + taskList.size() + " tasks!");
+                System.out.println("Now there are " + taskList.size() + " task(s)!");
             }
             System.out.println("----------------------------");
         }

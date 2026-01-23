@@ -1,7 +1,33 @@
-Hello from
- ____        _        
-|  _ \ _   _| | _____ 
-| | | | | | | |/ / _ \
-| |_| | |_| |   <  __/
-|____/ \__,_|_|\_\___|
-
+----------------------------
+Woooi! I'm Hachiware!
+What can I help you with?
+----------------------------
+Input > Added: [T][ ] borrow book
+Now there are 1 tasks!
+----------------------------
+Input > 1.[T][ ] borrow book
+----------------------------
+Input > Added: [D][ ] return book (by: Sunday)
+Now there are 2 tasks!
+----------------------------
+Input > Added: [E][ ] project meeting (from: Mon 2pm to: 4pm)
+Now there are 3 task(s)!
+----------------------------
+Input > Added: [D][ ] do homework (by: no idea :-p)
+Now there are 4 tasks!
+----------------------------
+Input > Yay! I've ticked off this task:
+[D][X] return book (by: Sunday)
+----------------------------
+Input > Yay! I've ticked off this task:
+[E][X] project meeting (from: Mon 2pm to: 4pm)
+----------------------------
+Input > Oops! I've unmarked this task:
+[E][ ] project meeting (from: Mon 2pm to: 4pm)
+----------------------------
+Input > 1.[T][ ] borrow book
+2.[D][X] return book (by: Sunday)
+3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+4.[D][ ] do homework (by: no idea :-p)
+----------------------------
+Input > Bye then!
