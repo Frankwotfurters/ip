@@ -1,133 +1,144 @@
 import java.util.*;
 
 public class Hachiware {
-    public static void main(String[] args) throws UnknownCommand, InvalidFormat {
+
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         List<Task> taskList = new ArrayList<>();
+
         System.out.println("----------------------------");
         System.out.println("Woooi! I'm Hachiware!");
         System.out.println("What can I help you with?");
         System.out.println("----------------------------");
-        
+
         while (true) {
             System.out.print("Input > ");
             String command = sc.nextLine();
-            
+
             try {
-                if (command.equals("bye")) {
-                    break;
-                }
-                else if (command.equals("list")) {
-                    printTasks(taskList);
-                }
-                else if (command.split(" ")[0].equals("mark")) {
+                // Parse command type
+                String[] tokens = command.split(" ");
+                CommandType type = CommandType.from(tokens[0]);
 
-                    int index = Integer.parseInt(command.split(" ")[1]) - 1;
-                    Task tempTask = taskList.get(index);
-                    tempTask.markDone();
-                    taskList.set(index, tempTask);
-                    // throw (new InvalidFormat());
-
-                    System.out.println("Yay! I've ticked off this task:");
-                    System.out.println(tempTask.toString());
-                }
-                else if (command.split(" ")[0].equals("unmark")) {
-                    int index = Integer.parseInt(command.split(" ")[1]) - 1;
-                    Task tempTask = taskList.get(index);
-                    tempTask.markNotDone();
-                    taskList.set(index, tempTask);
-
-                    System.out.println("Oops! I've unmarked this task:");
-                    System.out.println(tempTask.toString());
-                }
-                else if (command.split(" ")[0].equals("delete")) {
-                    // TODO: add invalid formatting error for this and marks
-                    int index = Integer.parseInt(command.split(" ")[1]) - 1;
-                    Task tempTask = taskList.get(index);
-
-                    taskList.remove(index);
-
-                    System.out.println("Okay! Deleting this task:");
-                    System.out.println(tempTask.toString());
-                }
-                else if (command.split(" ")[0].equals("todo")) {
-                    String[] parts;
-                    String desc;
-                    try {
-                        parts = command.split("todo ");
-                        desc = parts[1];
+                switch (type) {
+                    case BYE -> {
+                        System.out.println("Bye then!");
+                        return;
                     }
-                    catch (Exception e) {
-                        throw (new InvalidFormat());
-                    }
-
-                    Task task = new Todo(desc);
-                    taskList.add(task);
-                    System.out.println("Added: " + task.toString());
-                    System.out.println("Now there are " + taskList.size() + " tasks!");
+                    case LIST -> printTasks(taskList);
+                    case MARK -> handleMark(tokens, taskList);
+                    case UNMARK -> handleUnmark(tokens, taskList);
+                    case DELETE -> handleDelete(tokens, taskList);
+                    case TODO -> handleTodo(command, taskList);
+                    case DEADLINE -> handleDeadline(command, taskList);
+                    case EVENT -> handleEvent(command, taskList);
                 }
-                else if (command.split(" ")[0].equals("deadline")) {
-                    String[] parts;
-                    String desc;
-                    String by;
-
-                    try {
-                        parts = command.split("deadline | /by ");
-                        desc = parts[1];
-                        by = parts[2];
-                    }
-                    catch (Exception e) {
-                        throw (new InvalidFormat());
-                    }
-                    
-                    Task task = new Deadline(desc, by);
-                    taskList.add(task);
-                    System.out.println("Added: " + task.toString());
-                    System.out.println("Now there are " + taskList.size() + " tasks!");
-                }
-                else if (command.split(" ")[0].equals("event")) {
-                    String[] parts;
-                    String desc;
-                    String from;
-                    String to;
-                    try {
-                        parts = command.split("event | /from | /to ");
-                        desc = parts[1];
-                        from = parts[2];
-                        to = parts[3];
-                    }
-                    catch (Exception e) {
-                        throw (new InvalidFormat());
-                    }
-                    
-                    Task task = new Event(desc, from, to);
-                    taskList.add(task);
-                    System.out.println("Added: " + task.toString());
-                    System.out.println("Now there are " + taskList.size() + " tasks!");
-                }
-                else {
-                    throw new UnknownCommand();
-                }
-            }
-            catch (InvalidFormat e) {
+            } catch (InvalidFormat e) {
                 System.out.println(e.getMessage());
-            }
-            catch (UnknownCommand e) {
+            } catch (UnknownCommand e) {
                 System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("☹️ Something went wrong: " + e.getMessage());
             }
-            catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
+
             System.out.println("----------------------------");
         }
-        
-        System.out.println("Bye then!");
-        sc.close();
     }
 
+    // Command Handlers Start
+    private static void handleMark(String[] tokens, List<Task> taskList) throws InvalidFormat {
+        if (tokens.length != 2) throw new InvalidFormat();
+        int index;
+        try {
+            index = Integer.parseInt(tokens[1]) - 1;
+        } catch (NumberFormatException e) {
+            throw new InvalidFormat();
+        }
+        if (index < 0 || index >= taskList.size()) throw new InvalidFormat();
+        
+        Task tempTask = taskList.get(index);
+        tempTask.markDone();
+        System.out.println("Yay! I've ticked off this task:");
+        System.out.println(tempTask);
+    }
+    
+    private static void handleUnmark(String[] tokens, List<Task> taskList) throws InvalidFormat {
+        if (tokens.length != 2) throw new InvalidFormat();
+        int index;
+        try {
+            index = Integer.parseInt(tokens[1]) - 1;
+        } catch (NumberFormatException e) {
+            throw new InvalidFormat();
+        }
+        if (index < 0 || index >= taskList.size()) throw new InvalidFormat();
+        
+        Task tempTask = taskList.get(index);
+        tempTask.markNotDone();
+        System.out.println("Oops! I've unmarked this task:");
+        System.out.println(tempTask);
+    }
+    
+    private static void handleDelete(String[] tokens, List<Task> taskList) throws InvalidFormat {
+        if (tokens.length != 2) throw new InvalidFormat();
+        int index;
+        try {
+            index = Integer.parseInt(tokens[1]) - 1;
+        } catch (NumberFormatException e) {
+            throw new InvalidFormat();
+        }
+        if (index < 0 || index >= taskList.size()) throw new InvalidFormat();
+        
+        Task tempTask = taskList.remove(index);
+        System.out.println("Okay! Deleting this task:");
+        System.out.println(tempTask);
+    }
+    
+    private static void handleTodo(String command, List<Task> taskList) throws InvalidFormat {
+        try {
+            String desc = command.split("todo ", 2)[1].trim();
+            if (desc.isEmpty()) throw new InvalidFormat();
+            Task task = new Todo(desc);
+            taskList.add(task);
+            System.out.println("Added: " + task);
+            System.out.println("Now there are " + taskList.size() + " tasks!");
+        } catch (Exception e) {
+            throw new InvalidFormat();
+        }
+    }
+    
+    private static void handleDeadline(String command, List<Task> taskList) throws InvalidFormat {
+        try {
+            String[] parts = command.split("deadline | /by ", 3);
+            String desc = parts[1].trim();
+            String by = parts[2].trim();
+            Task task = new Deadline(desc, by);
+            taskList.add(task);
+            System.out.println("Added: " + task);
+            System.out.println("Now there are " + taskList.size() + " tasks!");
+        } catch (Exception e) {
+            throw new InvalidFormat();
+        }
+    }
+    
+    private static void handleEvent(String command, List<Task> taskList) throws InvalidFormat {
+        try {
+            String[] parts = command.split("event | /from | /to ", 4);
+            String desc = parts[1].trim();
+            String from = parts[2].trim();
+            String to = parts[3].trim();
+            Task task = new Event(desc, from, to);
+            taskList.add(task);
+            System.out.println("Added: " + task);
+            System.out.println("Now there are " + taskList.size() + " tasks!");
+        } catch (Exception e) {
+            throw new InvalidFormat();
+        }
+    }
+    // Command Handlers End
+    
     public static void printTasks(List<Task> taskList) {
         for (int i = 0; i < taskList.size(); i++) {
-            System.out.println(i+1 + "." + taskList.get(i).toString());
+            System.out.println((i + 1) + "." + taskList.get(i));
         }
     }
 }
