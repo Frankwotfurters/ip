@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Hachiware {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnknownCommand, InvalidFormat {
         Scanner sc = new Scanner(System.in);
         List<Task> taskList = new ArrayList<>();
         System.out.println("----------------------------");
@@ -13,64 +13,106 @@ public class Hachiware {
             System.out.print("Input > ");
             String command = sc.nextLine();
             
-            if (command.equals("bye")) {
-                break;
-            }
-            else if (command.equals("list")) {
-                printTasks(taskList);
-            }
-            else if (command.split(" ")[0].equals("mark")) {
-                int index = Integer.parseInt(command.split(" ")[1]) - 1;
-                Task tempTask = taskList.get(index);
-                tempTask.markDone();
-                taskList.set(index, tempTask);
+            try {
+                if (command.equals("bye")) {
+                    break;
+                }
+                else if (command.equals("list")) {
+                    printTasks(taskList);
+                }
+                else if (command.split(" ")[0].equals("mark")) {
 
-                System.out.println("Yay! I've ticked off this task:");
-                System.out.println(tempTask.toString());
-            }
-            else if (command.split(" ")[0].equals("unmark")) {
-                int index = Integer.parseInt(command.split(" ")[1]) - 1;
-                Task tempTask = taskList.get(index);
-                tempTask.markNotDone();
-                taskList.set(index, tempTask);
+                    int index = Integer.parseInt(command.split(" ")[1]) - 1;
+                    Task tempTask = taskList.get(index);
+                    tempTask.markDone();
+                    taskList.set(index, tempTask);
+                    // throw (new InvalidFormat());
 
-                System.out.println("Oops! I've unmarked this task:");
-                System.out.println(tempTask.toString());
-            }
-            else if (command.split(" ")[0].equals("todo")) {
-                String[] parts = command.split("todo ");
-                String desc = parts[1];
+                    System.out.println("Yay! I've ticked off this task:");
+                    System.out.println(tempTask.toString());
+                }
+                else if (command.split(" ")[0].equals("unmark")) {
+                    int index = Integer.parseInt(command.split(" ")[1]) - 1;
+                    Task tempTask = taskList.get(index);
+                    tempTask.markNotDone();
+                    taskList.set(index, tempTask);
 
-                Task task = new Todo(desc);
-                taskList.add(task);
-                System.out.println("Added: " + task.toString());
-                System.out.println("Now there are " + taskList.size() + " tasks!");
+                    System.out.println("Oops! I've unmarked this task:");
+                    System.out.println(tempTask.toString());
+                }
+                else if (command.split(" ")[0].equals("todo")) {
+                    String[] parts;
+                    String desc;
+                    try {
+                        parts = command.split("todo ");
+                        desc = parts[1];
+                    }
+                    catch (Exception e) {
+                        throw (new InvalidFormat());
+                    }
+
+                    Task task = new Todo(desc);
+                    taskList.add(task);
+                    System.out.println("Added: " + task.toString());
+                    System.out.println("Now there are " + taskList.size() + " tasks!");
+                }
+                else if (command.split(" ")[0].equals("deadline")) {
+                    String[] parts;
+                    String desc;
+                    String by;
+
+                    try {
+                        parts = command.split("deadline | /by ");
+                        desc = parts[1];
+                        by = parts[2];
+                    }
+                    catch (Exception e) {
+                        throw (new InvalidFormat());
+                    }
+                    
+                    Task task = new Deadline(desc, by);
+                    taskList.add(task);
+                    System.out.println("Added: " + task.toString());
+                    System.out.println("Now there are " + taskList.size() + " tasks!");
+                }
+                else if (command.split(" ")[0].equals("event")) {
+                    String[] parts;
+                    String desc;
+                    String from;
+                    String to;
+                    try {
+                        parts = command.split("deadline | /from | /to ");
+                        desc = parts[1];
+                        from = parts[2];
+                        to = parts[3];
+                    }
+                    catch (Exception e) {
+                        throw (new InvalidFormat());
+                    }
+                    
+                    Task task = new Event(desc, from, to);
+                    taskList.add(task);
+                    System.out.println("Added: " + task.toString());
+                    System.out.println("Now there are " + taskList.size() + " tasks!");
+                }
+                else {
+                    throw new UnknownCommand();
+                }
             }
-            else if (command.split(" ")[0].equals("deadline")) {
-                String[] parts = command.split("deadline | /by ");
-                String desc = parts[1];
-                String by = parts[2];
-                
-                Task task = new Deadline(desc, by);
-                taskList.add(task);
-                System.out.println("Added: " + task.toString());
-                System.out.println("Now there are " + taskList.size() + " tasks!");
+            catch (InvalidFormat e) {
+                System.out.println(e.getMessage());
             }
-            else if (command.split(" ")[0].equals("event")) {
-                String[] parts = command.split("event | /from | /to ");
-                String desc = parts[1];
-                String from = parts[2];
-                String to = parts[3];
-                
-                Task task = new Event(desc, from, to);
-                taskList.add(task);
-                System.out.println("Added: " + task.toString());
-                System.out.println("Now there are " + taskList.size() + " task(s)!");
+            catch (UnknownCommand e) {
+                System.out.println(e.getMessage());
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
             }
             System.out.println("----------------------------");
         }
         
         System.out.println("Bye then!");
+        sc.close();
     }
 
     public static void printTasks(List<Task> taskList) {
