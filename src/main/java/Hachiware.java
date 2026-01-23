@@ -40,6 +40,16 @@ public class Hachiware {
                     System.out.println("Oops! I've unmarked this task:");
                     System.out.println(tempTask.toString());
                 }
+                else if (command.split(" ")[0].equals("delete")) {
+                    // TODO: add invalid formatting error for this and marks
+                    int index = Integer.parseInt(command.split(" ")[1]) - 1;
+                    Task tempTask = taskList.get(index);
+
+                    taskList.remove(index);
+
+                    System.out.println("Okay! Deleting this task:");
+                    System.out.println(tempTask.toString());
+                }
                 else if (command.split(" ")[0].equals("todo")) {
                     String[] parts;
                     String desc;
@@ -81,7 +91,7 @@ public class Hachiware {
                     String from;
                     String to;
                     try {
-                        parts = command.split("deadline | /from | /to ");
+                        parts = command.split("event | /from | /to ");
                         desc = parts[1];
                         from = parts[2];
                         to = parts[3];
