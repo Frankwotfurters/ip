@@ -7,7 +7,19 @@ public class Hachiware {
         System.out.println("Woooi! I'm Hachiware!");
         System.out.println("What can I help you with?");
         System.out.println("----------------------------");
-        System.out.println("Bye then!");
         
+        while (true) {
+            System.out.print("Input > ");
+            String command = sc.nextLine();
+
+            if (command.equals("bye")) {
+                break;
+            }
+            else {
+                System.out.println(command);
+            }
+        }
+        
+        System.out.println("Bye then!");
     }
 }
