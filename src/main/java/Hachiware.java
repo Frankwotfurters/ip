@@ -37,9 +37,35 @@ public class Hachiware {
                 System.out.println("Oops! I've unmarked this task:");
                 System.out.println(tempTask.toString());
             }
-            else {
-                taskList.add(new Task(command));
-                System.out.println("Added: " + command);
+            else if (command.split(" ")[0].equals("todo")) {
+                String[] parts = command.split("todo ");
+                String desc = parts[1];
+
+                Task task = new Todo(desc);
+                taskList.add(task);
+                System.out.println("Added: " + task.toString());
+                System.out.println("Now there are " + taskList.size() + " tasks!");
+            }
+            else if (command.split(" ")[0].equals("deadline")) {
+                String[] parts = command.split("deadline | /by ");
+                String desc = parts[1];
+                String by = parts[2];
+                
+                Task task = new Deadline(desc, by);
+                taskList.add(task);
+                System.out.println("Added: " + task.toString());
+                System.out.println("Now there are " + taskList.size() + " tasks!");
+            }
+            else if (command.split(" ")[0].equals("event")) {
+                String[] parts = command.split("event | /from | /to ");
+                String desc = parts[1];
+                String from = parts[2];
+                String to = parts[3];
+                
+                Task task = new Event(desc, from, to);
+                taskList.add(task);
+                System.out.println("Added: " + task.toString());
+                System.out.println("Now there are " + taskList.size() + " tasks!");
             }
             System.out.println("----------------------------");
         }
