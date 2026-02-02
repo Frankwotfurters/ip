@@ -1,8 +1,14 @@
 import java.util.Scanner;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+
 public class Hachiware {
+    private static final DateTimeFormatter DATE_TIME_INPUT_FORMATTER = 
+        DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
+
     /* Main logic handler for all commands.
     Receives a command string and activates its respective handler.
     Input: command as a string, current taskList
@@ -127,27 +133,42 @@ public class Hachiware {
     
     private static void handleDeadline(String command, List<Task> taskList) throws InvalidFormat {
         try {
+            // Parse tokens
             String[] parts = command.split("deadline | /by ", 3);
             String desc = parts[1].trim();
             String by = parts[2].trim();
-            Task task = new Deadline(desc, by);
+            System.out.println(by);
+
+            // Convert 'by' to LocalDateTime object
+
+            LocalDateTime dateTime = LocalDateTime.parse(by, DATE_TIME_INPUT_FORMATTER);
+
+            // Create the Task object
+            Task task = new Deadline(desc, dateTime);
             taskList.add(task);
             Storage.storeTasks(taskList);
 
             System.out.println("Added: " + task);
             System.out.println("Now there are " + taskList.size() + " tasks!");
         } catch (Exception e) {
-            throw new InvalidFormat();
+            throw new InvalidFormat(e.toString());
         }
     }
     
     private static void handleEvent(String command, List<Task> taskList) throws InvalidFormat {
         try {
+            // Parse tokens
             String[] parts = command.split("event | /from | /to ", 4);
             String desc = parts[1].trim();
             String from = parts[2].trim();
             String to = parts[3].trim();
-            Task task = new Event(desc, from, to);
+
+            // Convert times to LocalDateTime objects
+            LocalDateTime start = LocalDateTime.parse(from, DATE_TIME_INPUT_FORMATTER);
+            LocalDateTime end = LocalDateTime.parse(to, DATE_TIME_INPUT_FORMATTER);
+
+            // Create the Task object
+            Task task = new Event(desc, start, end);
             taskList.add(task);
             Storage.storeTasks(taskList);
             
