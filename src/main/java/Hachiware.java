@@ -1,9 +1,5 @@
-import java.util.List;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 public class Hachiware {
-    protected List<Task> taskList = Storage.fetchSavedTasks();
+    protected TaskList taskList;
 
     public Hachiware() {
         this.taskList = Storage.fetchSavedTasks();

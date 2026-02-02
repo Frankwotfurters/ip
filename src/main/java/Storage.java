@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,12 +12,12 @@ public class Storage {
     /*
     Receives a taskList and saves it to STORAGE_FILE_PATH by serializing the list of Task objects
     */
-    public static void storeTasks(List<Task> taskList) {
+    public static void storeTasks(TaskList taskList) {
         try (FileOutputStream fos = new FileOutputStream(STORAGE_FILE_PATH);
             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             
             oos.writeObject(taskList);
-            System.out.println("Object successfully saved to " + STORAGE_FILE_PATH);
+            // System.out.println("Object successfully saved to " + STORAGE_FILE_PATH);
 
         } catch (IOException e) {
             System.err.println("Error saving object: " + e.getMessage());
@@ -29,22 +28,28 @@ public class Storage {
     /*
     Seeks the data file at STORAGE_FILE_PATH and restores it to a List<Task> via unserialization
     */
-    public static List<Task> fetchSavedTasks() {
-        List<Task> taskList = null;
+    public static TaskList fetchSavedTasks() {
+        TaskList taskList = null;
         
         // Case 1, read from file
         try (FileInputStream fis = new FileInputStream(STORAGE_FILE_PATH);
             ObjectInputStream ois = new ObjectInputStream(fis)) {
             
             //TODO: handle corrupted file data
-            taskList = (List<Task>) ois.readObject();
-            System.out.println("Object successfully loaded from " + STORAGE_FILE_PATH);
+            taskList = (TaskList) ois.readObject();
+            System.out.println("Previous tasks successfully loaded from " + STORAGE_FILE_PATH + ":");
+            taskList.printTasks();
 
         } catch (IOException | ClassNotFoundException e) {
             // Case 2, file not found/corrupted
+            System.err.println("Error reading saved file: " + e.getMessage());
+            e.printStackTrace();
+            return new TaskList();
+        } catch (Exception e) {
+            // Case 3, other errors
             System.err.println("Error loading saved tasks: " + e.getMessage());
             e.printStackTrace();
-            return new ArrayList<Task>();
+            return new TaskList();
         }
         return taskList;
     }
