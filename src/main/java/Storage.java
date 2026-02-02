@@ -11,24 +11,6 @@ public class Storage {
     private final static String STORAGE_FILE_PATH = "tasks.txt";
 
     /*
-    Initializes the file where Tasks are saved.
-    Only called when it does not exist yet.
-     */
-    public static void initStorage() {
-        File file = new File(STORAGE_FILE_PATH);
-
-        try {
-            if (file.createNewFile()) {
-                System.out.println("File created successfully: " + file.getName());
-            } else {
-                System.out.println("File already exists: " + file.getName());
-            }
-        } catch (IOException e) {
-            System.err.println("An I/O error occurred: " + e.getMessage());
-        }
-    }
-
-    /*
     Receives a taskList and saves it to STORAGE_FILE_PATH by serializing the list of Task objects
     */
     public static void storeTasks(List<Task> taskList) {
@@ -49,6 +31,8 @@ public class Storage {
     */
     public static List<Task> fetchSavedTasks() {
         List<Task> taskList = null;
+        
+        // Case 1, read from file
         try (FileInputStream fis = new FileInputStream(STORAGE_FILE_PATH);
             ObjectInputStream ois = new ObjectInputStream(fis)) {
             
@@ -57,6 +41,7 @@ public class Storage {
             System.out.println("Object successfully loaded from " + STORAGE_FILE_PATH);
 
         } catch (IOException | ClassNotFoundException e) {
+            // Case 2, file not found/corrupted
             System.err.println("Error loading saved tasks: " + e.getMessage());
             e.printStackTrace();
             return new ArrayList<Task>();
