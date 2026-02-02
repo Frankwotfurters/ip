@@ -8,13 +8,17 @@ import java.io.ObjectOutputStream;
 import task.TaskList;
 
 
-
+/**
+ * Storage class used to handle reading and writing of Tasks to files
+ */
 public class Storage {
     public final static String STORAGE_FILE_PATH = "tasks.txt";
 
-    /*
-    Receives a taskList and saves it to STORAGE_FILE_PATH by serializing the list of Task objects
-    */
+    /**
+     * Receives a TaskList and saves it to STORAGE_FILE_PATH by serializing the list of Task objects
+     * <p>
+     * @param taskList TaskList to be stored
+     */
     public static void storeTasks(TaskList taskList) {
         try (FileOutputStream fos = new FileOutputStream(STORAGE_FILE_PATH);
             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
@@ -28,9 +32,11 @@ public class Storage {
         }
     }
     
-    /*
-    Seeks the data file at STORAGE_FILE_PATH and restores it to a List<Task> via unserialization
-    */
+    /**
+     * Seeks the data file at STORAGE_FILE_PATH and restores it to a List<Task> via unserialization
+     * <p>
+     * @return TaskList object with the restored Tasks
+     */
     public static TaskList fetchSavedTasks() {
         TaskList taskList = null;
         

@@ -11,14 +11,20 @@ import task.Todo;
 import task.Deadline;
 import task.Event;
 
+/**
+ * Class to handle parsing of user commands
+ * and calling of respective handler methods
+ */
 public class Parser {
     private static final DateTimeFormatter DATE_TIME_INPUT_FORMATTER = 
         DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
 
     /* Main logic handler for all commands.
-    Receives a command string and activates its respective handler.
-    Input: command as a string, current taskList
-    */
+     * @param command command string to be parsed
+     * @param taskList TaskList object containing current tasks
+     * @throws InvalidFormat if proper syntax of command is not used
+     * @throws UnknownCommand if command is not recognized
+     */
     public static void parseCommand(String command, TaskList taskList) throws InvalidFormat, UnknownCommand {
         // Parse command type
         String[] tokens = command.split(" ");
@@ -34,7 +40,7 @@ public class Parser {
         }
     }
 
-        // Command Handlers Start
+    // Command Handlers Start
     private static void handleMark(String[] tokens, TaskList taskList) throws InvalidFormat {
         if (tokens.length != 2) throw new InvalidFormat();
         int index;

@@ -5,6 +5,10 @@ import exception.UnknownCommand;
 
 import task.TaskList;
 
+/**
+ * Main chatbot class which can be instantiated
+ * to run and receive commands
+ */
 public class Hachiware {
     protected TaskList taskList;
 
