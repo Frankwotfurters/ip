@@ -1,3 +1,5 @@
+package exception;
+
 public class InvalidFormat extends Exception {
     public InvalidFormat() {
         super("Wrong format!");

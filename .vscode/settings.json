@@ -1,0 +1,10 @@
+{
+    // Source folder(s) for Java packages
+    "java.project.sourcePaths": ["src/main/java"],
+
+    // Where compiled .class files go
+    "java.project.outputPath": "bin",
+
+    // Automatically build project on save
+    "java.autobuild.enabled": true,
+}

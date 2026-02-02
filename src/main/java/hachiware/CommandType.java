@@ -1,3 +1,6 @@
+package hachiware;
+import exception.UnknownCommand;
+
 public enum CommandType {
     LIST,
     MARK,

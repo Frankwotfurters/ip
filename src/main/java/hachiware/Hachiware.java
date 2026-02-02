@@ -1,3 +1,10 @@
+package hachiware;
+
+import exception.InvalidFormat;
+import exception.UnknownCommand;
+
+import task.TaskList;
+
 public class Hachiware {
     protected TaskList taskList;
 

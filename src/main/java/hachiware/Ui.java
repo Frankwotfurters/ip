@@ -1,3 +1,4 @@
+package hachiware;
 import java.util.Scanner;
 
 public class Ui {
