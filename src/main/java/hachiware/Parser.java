@@ -110,25 +110,25 @@ public class Parser {
     }
     
     private static void handleDeadline(String command, TaskList taskList) throws InvalidFormat {
-        try {
-            // Parse tokens
-            String[] parts = command.split("deadline | /by ", 3);
-            String desc = parts[1].trim();
-            String by = parts[2].trim();
+        // Parse tokens
+        String[] parts = command.split("deadline | /by ", 3);
 
-            // Convert 'by' to LocalDateTime object
-            LocalDateTime dateTime = LocalDateTime.parse(by, DATE_TIME_INPUT_FORMATTER);
+        if (parts.length != 3) {
+            throw new InvalidFormat("Invalid format! Please use the format \'deadline [description] /by [DD/MM/YYYY HHMM]'!\'");
+        } 
+        String desc = parts[1].trim();
+        String by = parts[2].trim();
 
-            // Create the Task object
-            Task task = new Deadline(desc, dateTime);
-            taskList.addTask(task);
-            Storage.storeTasks(taskList);
+        // Convert 'by' to LocalDateTime object
+        LocalDateTime dateTime = LocalDateTime.parse(by, DATE_TIME_INPUT_FORMATTER);
 
-            System.out.println("Added: " + task);
-            System.out.println("Now there are " + taskList.getSize() + " tasks!");
-        } catch (Exception e) {
-            throw new InvalidFormat(e.toString());
-        }
+        // Create the Task object
+        Task task = new Deadline(desc, dateTime);
+        taskList.addTask(task);
+        Storage.storeTasks(taskList);
+
+        System.out.println("Added: " + task);
+        System.out.println("Now there are " + taskList.getSize() + " tasks!");
     }
     
     private static void handleEvent(String command, TaskList taskList) throws InvalidFormat {

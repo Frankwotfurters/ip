@@ -10,7 +10,7 @@ import task.TaskList;
 
 
 public class Storage {
-    private final static String STORAGE_FILE_PATH = "tasks.txt";
+    public final static String STORAGE_FILE_PATH = "tasks.txt";
 
     /*
     Receives a taskList and saves it to STORAGE_FILE_PATH by serializing the list of Task objects
@@ -46,12 +46,10 @@ public class Storage {
         } catch (IOException | ClassNotFoundException e) {
             // Case 2, file not found/corrupted
             System.err.println("Error reading saved file: " + e.getMessage());
-            e.printStackTrace();
             return new TaskList();
         } catch (Exception e) {
             // Case 3, other errors
             System.err.println("Error loading saved tasks: " + e.getMessage());
-            e.printStackTrace();
             return new TaskList();
         }
         return taskList;
