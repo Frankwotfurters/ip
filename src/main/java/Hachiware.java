@@ -1,10 +1,32 @@
-import java.util.*;
+import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Hachiware {
-
+    /* Main logic handler for all commands.
+    Receives a command string and activates its respective handler.
+    Input: command as a string, current taskList
+    */
+    public static void parseCommand(String command, List<Task> taskList) throws InvalidFormat, UnknownCommand {
+        // Parse command type
+        String[] tokens = command.split(" ");
+        CommandType type = CommandType.from(tokens[0]);
+        switch (type) {
+            case BYE -> {
+                System.out.println("Bye then!");
+            }
+            case LIST -> printTasks(taskList);
+            case MARK -> handleMark(tokens, taskList);
+            case UNMARK -> handleUnmark(tokens, taskList);
+            case DELETE -> handleDelete(tokens, taskList);
+            case TODO -> handleTodo(command, taskList);
+            case DEADLINE -> handleDeadline(command, taskList);
+            case EVENT -> handleEvent(command, taskList);
+        }
+    }
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        List<Task> taskList = new ArrayList<>();
+        List<Task> taskList = Storage.fetchSavedTasks();
 
         System.out.println("----------------------------");
         System.out.println("Woooi! I'm Hachiware!");
@@ -12,27 +34,16 @@ public class Hachiware {
         System.out.println("----------------------------");
 
         while (true) {
+            // Receive command
             System.out.print("Input > ");
             String command = sc.nextLine();
 
-            try {
-                // Parse command type
-                String[] tokens = command.split(" ");
-                CommandType type = CommandType.from(tokens[0]);
+            if (command.equals("bye")) {
+                break;
+            }
 
-                switch (type) {
-                    case BYE -> {
-                        System.out.println("Bye then!");
-                        return;
-                    }
-                    case LIST -> printTasks(taskList);
-                    case MARK -> handleMark(tokens, taskList);
-                    case UNMARK -> handleUnmark(tokens, taskList);
-                    case DELETE -> handleDelete(tokens, taskList);
-                    case TODO -> handleTodo(command, taskList);
-                    case DEADLINE -> handleDeadline(command, taskList);
-                    case EVENT -> handleEvent(command, taskList);
-                }
+            try {
+                parseCommand(command, taskList);
             } catch (InvalidFormat e) {
                 System.out.println(e.getMessage());
             } catch (UnknownCommand e) {
@@ -58,6 +69,8 @@ public class Hachiware {
         
         Task tempTask = taskList.get(index);
         tempTask.markDone();
+        Storage.storeTasks(taskList);
+
         System.out.println("Yay! I've ticked off this task:");
         System.out.println(tempTask);
     }
@@ -74,6 +87,8 @@ public class Hachiware {
         
         Task tempTask = taskList.get(index);
         tempTask.markNotDone();
+        Storage.storeTasks(taskList);
+
         System.out.println("Oops! I've unmarked this task:");
         System.out.println(tempTask);
     }
@@ -89,6 +104,8 @@ public class Hachiware {
         if (index < 0 || index >= taskList.size()) throw new InvalidFormat();
         
         Task tempTask = taskList.remove(index);
+        Storage.storeTasks(taskList);
+
         System.out.println("Okay! Deleting this task:");
         System.out.println(tempTask);
     }
@@ -99,6 +116,8 @@ public class Hachiware {
             if (desc.isEmpty()) throw new InvalidFormat();
             Task task = new Todo(desc);
             taskList.add(task);
+            Storage.storeTasks(taskList);
+
             System.out.println("Added: " + task);
             System.out.println("Now there are " + taskList.size() + " tasks!");
         } catch (Exception e) {
@@ -113,6 +132,8 @@ public class Hachiware {
             String by = parts[2].trim();
             Task task = new Deadline(desc, by);
             taskList.add(task);
+            Storage.storeTasks(taskList);
+
             System.out.println("Added: " + task);
             System.out.println("Now there are " + taskList.size() + " tasks!");
         } catch (Exception e) {
@@ -128,17 +149,19 @@ public class Hachiware {
             String to = parts[3].trim();
             Task task = new Event(desc, from, to);
             taskList.add(task);
+            Storage.storeTasks(taskList);
+            
             System.out.println("Added: " + task);
             System.out.println("Now there are " + taskList.size() + " tasks!");
         } catch (Exception e) {
             throw new InvalidFormat();
         }
     }
-    // Command Handlers End
     
     public static void printTasks(List<Task> taskList) {
         for (int i = 0; i < taskList.size(); i++) {
             System.out.println((i + 1) + "." + taskList.get(i));
         }
     }
+    // Command Handlers End
 }
