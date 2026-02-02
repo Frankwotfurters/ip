@@ -1,9 +1,6 @@
-import java.util.Scanner;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-
 
 public class Hachiware {
     private static final DateTimeFormatter DATE_TIME_INPUT_FORMATTER = 
@@ -18,9 +15,6 @@ public class Hachiware {
         String[] tokens = command.split(" ");
         CommandType type = CommandType.from(tokens[0]);
         switch (type) {
-            case BYE -> {
-                System.out.println("Bye then!");
-            }
             case LIST -> printTasks(taskList);
             case MARK -> handleMark(tokens, taskList);
             case UNMARK -> handleUnmark(tokens, taskList);
@@ -31,20 +25,16 @@ public class Hachiware {
         }
     }
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
         List<Task> taskList = Storage.fetchSavedTasks();
 
-        System.out.println("----------------------------");
-        System.out.println("Woooi! I'm Hachiware!");
-        System.out.println("What can I help you with?");
-        System.out.println("----------------------------");
+        Ui.printWelcomeMessage();
 
         while (true) {
             // Receive command
-            System.out.print("Input > ");
-            String command = sc.nextLine();
+            String command = Ui.promptInput();
 
             if (command.equals("bye")) {
+                Ui.printExitMessage();
                 break;
             }
 
@@ -58,7 +48,7 @@ public class Hachiware {
                 System.out.println("☹️ Something went wrong: " + e.getMessage());
             }
 
-            System.out.println("----------------------------");
+            Ui.printBar();
         }
     }
 
