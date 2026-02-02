@@ -31,10 +31,11 @@ public class Parser {
             case TODO -> handleTodo(command, taskList);
             case DEADLINE -> handleDeadline(command, taskList);
             case EVENT -> handleEvent(command, taskList);
+            case FIND -> handleFind(command, taskList);
         }
     }
 
-        // Command Handlers Start
+    // Command Handlers Start
     private static void handleMark(String[] tokens, TaskList taskList) throws InvalidFormat {
         if (tokens.length != 2) throw new InvalidFormat();
         int index;
@@ -157,6 +158,14 @@ public class Parser {
     
     public static void printTasks(TaskList taskList) {
         taskList.printTasks();
+    }
+
+    private static void handleFind(String command, TaskList taskList) {
+        // Parse tokens
+        String[] parts = command.split("find ", 4);
+        String searchString = parts[1];
+
+        taskList.findTask(searchString);
     }
     // Command Handlers End
 }
