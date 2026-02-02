@@ -34,13 +34,13 @@ public class Parser {
         CommandType type = CommandType.from(tokens[0].toUpperCase());
 
         switch (type) {
-            case LIST -> printTasks(taskList);
-            case MARK -> handleMark(tokens, taskList);
-            case UNMARK -> handleUnmark(tokens, taskList);
-            case DELETE -> handleDelete(tokens, taskList);
-            case TODO -> handleTodo(tokens, taskList);
-            case DEADLINE -> handleDeadline(tokens, taskList);
-            case EVENT -> handleEvent(tokens, taskList);
+        case LIST -> printTasks(taskList);
+        case MARK -> handleMark(tokens, taskList);
+        case UNMARK -> handleUnmark(tokens, taskList);
+        case DELETE -> handleDelete(tokens, taskList);
+        case TODO -> handleTodo(tokens, taskList);
+        case DEADLINE -> handleDeadline(tokens, taskList);
+        case EVENT -> handleEvent(tokens, taskList);
         }
     }
 
