@@ -45,6 +45,7 @@ public class Parser {
         case TODO -> handleTodo(tokens, taskList);
         case DEADLINE -> handleDeadline(tokens, taskList);
         case EVENT -> handleEvent(tokens, taskList);
+        case FIND -> handleFind(command, taskList);
         }
     }
 
@@ -191,6 +192,14 @@ public class Parser {
      */
     public static void printTasks(TaskList taskList) {
         taskList.printTasks();
+    }
+
+    private static void handleFind(String command, TaskList taskList) {
+        // Parse tokens
+        String[] parts = command.split("find ", 4);
+        String searchString = parts[1];
+
+        taskList.findTask(searchString);
     }
 
     // ---------------- Command Handlers End ----------------

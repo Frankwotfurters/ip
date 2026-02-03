@@ -45,4 +45,12 @@ public class TaskList implements Serializable {
     public void markNotDone(int i) {
         taskList.get(i).markNotDone();
     }
+
+    public void findTask(String searchString) {
+        for (int i = 0; i < taskList.size(); i++) {
+            if (taskList.get(i).getDescription().contains(searchString)) {
+                System.out.println((i + 1) + "." + taskList.get(i));
+            }
+        }   
+    }
 }

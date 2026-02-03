@@ -8,7 +8,8 @@ public enum CommandType {
     DELETE,
     TODO,
     DEADLINE,
-    EVENT;
+    EVENT,
+    FIND;
 
     public static CommandType from(String input) throws UnknownCommand {
         try {
