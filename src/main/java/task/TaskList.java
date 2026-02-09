@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import hachiware.Ui;
+
 public class TaskList implements Serializable {
     private static final long serialVersionUID = 1L;
     private List<Task> taskList;
@@ -47,10 +49,15 @@ public class TaskList implements Serializable {
     }
 
     public void findTask(String searchString) {
+        boolean isFound = false;
         for (int i = 0; i < taskList.size(); i++) {
             if (taskList.get(i).getDescription().contains(searchString)) {
+                isFound = true;
                 System.out.println((i + 1) + "." + taskList.get(i));
             }
         }   
+
+        // no matching tasks found
+        Ui.printNotFoundMessage();
     }
 }

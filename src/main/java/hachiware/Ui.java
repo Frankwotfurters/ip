@@ -29,6 +29,13 @@ public class Ui {
     }
 
     /*
+        * Prints the no tasks found message
+        */
+    public static void printNotFoundMessage() {
+        System.out.println("No tasks found!");
+    }
+
+    /*
      * Prints a formatting bar
      */
     public static void printBar() {
