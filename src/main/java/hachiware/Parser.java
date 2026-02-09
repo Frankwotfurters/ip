@@ -6,17 +6,12 @@ import java.time.format.DateTimeParseException;
 
 import exception.InvalidFormat;
 import exception.UnknownCommand;
-
+import task.Deadline;
+import task.Event;
 import task.Task;
 import task.TaskList;
 import task.Todo;
-import task.Deadline;
-import task.Event;
 
-/**
- * Class to handle parsing of user commands
- * and calling of respective handler methods
- */
 /**
  * Class to handle parsing of user commands
  * and calling of respective handler methods
@@ -46,6 +41,7 @@ public class Parser {
         case DEADLINE -> handleDeadline(tokens, taskList);
         case EVENT -> handleEvent(tokens, taskList);
         case FIND -> handleFind(command, taskList);
+        default -> new UnknownCommand();
         }
     }
 
@@ -175,7 +171,9 @@ public class Parser {
      * @throws InvalidFormat if the index is missing, non-numeric, or out of range
      */
     private static int parseIndex(String[] tokens, TaskList taskList) throws InvalidFormat {
-        if (tokens.length != 2) throw new InvalidFormat("Task index missing!");
+        if (tokens.length != 2) {
+            throw new InvalidFormat("Task index missing!");
+        }
         try {
             int index = Integer.parseInt(tokens[1]) - 1;
             if (index < 0 || index >= taskList.getSize()) {

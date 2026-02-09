@@ -2,7 +2,6 @@ package hachiware;
 
 import exception.InvalidFormat;
 import exception.UnknownCommand;
-
 import task.TaskList;
 
 /**
@@ -16,6 +15,9 @@ public class Hachiware {
         this.taskList = Storage.fetchSavedTasks();
     }
 
+    /**
+     * Start running this Hachiware instance
+     */
     public void run() {
         while (true) {
             // Receive command

@@ -12,7 +12,7 @@ import task.TaskList;
  * Storage class used to handle reading and writing of Tasks to files
  */
 public class Storage {
-    public final static String STORAGE_FILE_PATH = "tasks.txt";
+    public static final String STORAGE_FILE_PATH = "tasks.txt";
 
     /**
      * Receives a TaskList and saves it to STORAGE_FILE_PATH by serializing the list of Task objects

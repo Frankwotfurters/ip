@@ -3,6 +3,9 @@ package task;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Class that represents an Event, which has a /from and /to field
+ */
 public class Event extends Task {
 
     protected LocalDateTime from;
