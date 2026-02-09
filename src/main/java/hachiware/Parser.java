@@ -27,22 +27,43 @@ public class Parser {
      * @throws InvalidFormat if proper syntax of command is not used
      * @throws UnknownCommand if command is not recognized
      */
-    public static void parseCommand(String command, TaskList taskList) throws InvalidFormat, UnknownCommand {
+    public static String parseCommand(String command, TaskList taskList) throws InvalidFormat, UnknownCommand {
         // Parse command type (first word)
         String[] tokens = command.split(" ", 2); // split only on first space
         CommandType type = CommandType.from(tokens[0].toUpperCase());
+        String response = "";
 
         switch (type) {
-        case LIST -> printTasks(taskList);
-        case MARK -> handleMark(tokens, taskList);
-        case UNMARK -> handleUnmark(tokens, taskList);
-        case DELETE -> handleDelete(tokens, taskList);
-        case TODO -> handleTodo(tokens, taskList);
-        case DEADLINE -> handleDeadline(tokens, taskList);
-        case EVENT -> handleEvent(tokens, taskList);
-        case FIND -> handleFind(command, taskList);
-        default -> new UnknownCommand();
+        case LIST:
+            response = printTasks(taskList);
+            break;
+        case MARK:
+            response = handleMark(tokens, taskList);
+            break;
+        case UNMARK:
+            response = handleUnmark(tokens, taskList);
+            break;
+        case DELETE:
+            response = handleDelete(tokens, taskList);
+            break;
+        case TODO:
+            response = handleTodo(tokens, taskList);
+            break;
+        case DEADLINE:
+            response = handleDeadline(tokens, taskList);
+            break;
+        case EVENT:
+            response = handleEvent(tokens, taskList);
+            break;
+        case FIND:
+            response = handleFind(command, taskList);
+            break;
+        default:
+            response = new UnknownCommand().getMessage();
         }
+
+        System.out.println(response);
+        return response;
     }
 
     // ---------------- Command Handlers Start ----------------
@@ -50,65 +71,61 @@ public class Parser {
     /**
      * Handles marking a task as done.
      */
-    private static void handleMark(String[] tokens, TaskList taskList) throws InvalidFormat {
+    private static String handleMark(String[] tokens, TaskList taskList) throws InvalidFormat {
         int index = parseIndex(tokens, taskList);
 
         Task tempTask = taskList.getTask(index);
-        tempTask.markDone();
+        String res = tempTask.markDone();
         Storage.storeTasks(taskList);
 
-        System.out.println("Yay! I've ticked off this task:");
-        System.out.println(tempTask);
+        return res;
     }
 
     /**
      * Handles unmarking a task.
      */
-    private static void handleUnmark(String[] tokens, TaskList taskList) throws InvalidFormat {
+    private static String handleUnmark(String[] tokens, TaskList taskList) throws InvalidFormat {
         int index = parseIndex(tokens, taskList);
 
         Task tempTask = taskList.getTask(index);
-        tempTask.markNotDone();
+        String res = tempTask.markNotDone();
         Storage.storeTasks(taskList);
 
-        System.out.println("Oops! I've unmarked this task:");
-        System.out.println(tempTask);
+        return res;
     }
 
     /**
      * Handles deleting a task.
      */
-    private static void handleDelete(String[] tokens, TaskList taskList) throws InvalidFormat {
+    private static String handleDelete(String[] tokens, TaskList taskList) throws InvalidFormat {
         int index = parseIndex(tokens, taskList);
 
-        Task tempTask = taskList.deleteTask(index);
+        String res = taskList.deleteTask(index);
         Storage.storeTasks(taskList);
-
-        System.out.println("Okay! Deleting this task:");
-        System.out.println(tempTask);
+    
+        return res;
     }
 
     /**
      * Handles creating a new Todo task.
      */
-    private static void handleTodo(String[] tokens, TaskList taskList) throws InvalidFormat {
+    private static String handleTodo(String[] tokens, TaskList taskList) throws InvalidFormat {
         // Ensure description exists
         if (tokens.length < 2 || tokens[1].trim().isEmpty()) {
             throw new InvalidFormat("Todo description cannot be empty!");
         }
 
         Task task = new Todo(tokens[1].trim());
-        taskList.addTask(task);
+        String res = taskList.addTask(task);
         Storage.storeTasks(taskList);
 
-        System.out.println("Added: " + task);
-        System.out.println("Now there are " + taskList.getSize() + " tasks!");
+        return res;
     }
 
     /**
      * Handles creating a new Deadline task.
      */
-    private static void handleDeadline(String[] tokens, TaskList taskList) throws InvalidFormat {
+    private static String handleDeadline(String[] tokens, TaskList taskList) throws InvalidFormat {
         if (tokens.length < 2) {
             throw new InvalidFormat("Invalid format! Use: deadline [desc] /by [DD/MM/YYYY HHMM]");
         }
@@ -125,11 +142,11 @@ public class Parser {
 
             // Create the Task object
             Task task = new Deadline(parts[0].trim(), dateTime);
-            taskList.addTask(task);
+            String res = taskList.addTask(task);
             Storage.storeTasks(taskList);
 
-            System.out.println("Added: " + task);
-            System.out.println("Now there are " + taskList.getSize() + " tasks!");
+            return res;
+
         } catch (DateTimeParseException e) {
             throw new InvalidFormat("Invalid date/time format! Use DD/MM/YYYY HHMM");
         }
@@ -138,7 +155,7 @@ public class Parser {
     /**
      * Handles creating a new Event task.
      */
-    private static void handleEvent(String[] tokens, TaskList taskList) throws InvalidFormat {
+    private static String handleEvent(String[] tokens, TaskList taskList) throws InvalidFormat {
         if (tokens.length < 2) {
             throw new InvalidFormat("Invalid format! Use: event [desc] /from [DD/MM/YYYY HHMM] /to [DD/MM/YYYY HHMM]");
         }
@@ -156,11 +173,12 @@ public class Parser {
 
             // Create the Task object
             Task task = new Event(parts[0].trim(), start, end);
-            taskList.addTask(task);
+            String res = taskList.addTask(task);
             Storage.storeTasks(taskList);
 
-            System.out.println("Added: " + task);
-            System.out.println("Now there are " + taskList.getSize() + " tasks!");
+            return res;
+
+
         } catch (DateTimeParseException e) {
             throw new InvalidFormat("Invalid date/time format! Use DD/MM/YYYY HHMM");
         }
@@ -188,16 +206,16 @@ public class Parser {
     /**
      * Prints all tasks in the TaskList
      */
-    public static void printTasks(TaskList taskList) {
-        taskList.printTasks();
+    public static String printTasks(TaskList taskList) {
+        return taskList.printTasks();
     }
 
-    private static void handleFind(String command, TaskList taskList) {
+    private static String handleFind(String command, TaskList taskList) {
         // Parse tokens
         String[] parts = command.split("find ", 4);
         String searchString = parts[1];
 
-        taskList.findTask(searchString);
+        return taskList.findTask(searchString);
     }
 
     // ---------------- Command Handlers End ----------------

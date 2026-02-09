@@ -23,12 +23,16 @@ public class Task implements Serializable {
 
     public String markDone() {
         this.isDone = true;
-        return this.toString();
+
+        String res = "Yay! I've ticked off this task:\n" + this.toString();
+        return res;
     }
     
     public String markNotDone() {
         this.isDone = false;
-        return this.toString();
+
+        String res = "Oops! I've unmarked this task:\n" + this.toString();
+        return res;
     }
 
     @Override

@@ -10,11 +10,16 @@ public class Ui {
     /**
      * Prints the welcome message upon running the bot
      */
-    public static void printWelcomeMessage() {
-        System.out.println("----------------------------");
-        System.out.println("Woooi! I'm Hachiware!");
-        System.out.println("What can I help you with?");
-        System.out.println("----------------------------");
+    public static String printWelcomeMessage() {
+        String res = """
+                ----------------------------
+                Woooi! I'm Hachiware!
+                What can I help you with?
+                ----------------------------
+                """;
+        System.out.println(res);
+
+        return res;
     }
 
     /**
@@ -31,21 +36,27 @@ public class Ui {
     /*
         * Prints the no tasks found message
         */
-    public static void printNotFoundMessage() {
-        System.out.println("No tasks found!");
+    public static String printNotFoundMessage() {
+        String res = "No tasks found!";
+        // System.out.println(res);
+        return res;
     }
 
     /*
      * Prints a formatting bar
      */
-    public static void printBar() {
-        System.out.println("----------------------------");
+    public static String printBar() {
+        String res = "----------------------------";
+        System.out.println(res);
+        return res;
     }
 
     /*
      * Prints the exit message
      */
-    public static void printExitMessage() {
-        System.out.println("Bye then!");
+    public static String printExitMessage() {
+        String res = "Bye then!";
+        System.out.println(res);
+        return res;
     }
 }

@@ -33,10 +33,13 @@ public class TaskList implements Serializable {
     /**
      * Prints each task's string representation
      */
-    public void printTasks() {
+    public String printTasks() {
+        String res = "";
         for (int i = 0; i < taskList.size(); i++) {
-            System.out.println((i + 1) + "." + taskList.get(i));
+            res += (i + 1) + "." + taskList.get(i) + "\n";
         }
+
+        return res;
     }
 
     /**
@@ -52,8 +55,11 @@ public class TaskList implements Serializable {
      * Helper method to add a task to the end of the TaskList
      * @param task to be added
      */
-    public void addTask(Task task) {
-        taskList.add(task);
+    public String addTask(Task task) {
+        this.taskList.add(task);
+
+        String res = "Added: " + task + "\nNow there are " + this.taskList.size() + " tasks!";
+        return res;
     }
 
     /**
@@ -61,24 +67,27 @@ public class TaskList implements Serializable {
      * @param i index of Task to be deleted
      * @return Task that was deleted
      */
-    public Task deleteTask(int i) {
-        return taskList.remove(i);
+    public String deleteTask(int i) {
+        Task removedTask = taskList.remove(i);
+
+        String res = "Okay! Deleting this task:\n" + removedTask;
+        return res;
     }
 
     /**
      * Helper method to mark a Task at index i as done
      * @param i index of Task to be marked as done
      */
-    public void markDone(int i) {
-        taskList.get(i).markDone();
+    public String markDone(int i) {
+        return taskList.get(i).markDone();
     }
 
     /**
      * Helper method to unmark a Task at index i as done
      * @param i index of Task to be unmarked as done
      */
-    public void markNotDone(int i) {
-        taskList.get(i).markNotDone();
+    public String markNotDone(int i) {
+        return taskList.get(i).markNotDone();
     }
 
     /**
@@ -86,18 +95,21 @@ public class TaskList implements Serializable {
      * and prints each one out
      * @param searchString search string to be queried
      */
-    public void findTask(String searchString) {
+    public String findTask(String searchString) {
         boolean isFound = false;
+        String res = "";
+
         for (int i = 0; i < taskList.size(); i++) {
             if (taskList.get(i).getDescription().contains(searchString)) {
                 isFound = true;
-                System.out.println((i + 1) + "." + taskList.get(i));
+                res += (i + 1) + "." + taskList.get(i);
             }
         }   
 
         // no matching tasks found
         if (!isFound) {
-            Ui.printNotFoundMessage();
+            return Ui.printNotFoundMessage();
         }
+        return res;
     }
 }

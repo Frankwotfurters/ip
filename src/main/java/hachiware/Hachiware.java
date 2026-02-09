@@ -44,6 +44,15 @@ public class Hachiware {
         }
     }
 
+    public String takeSingleCommand(String command) {
+        try {
+            return Parser.parseCommand(command, this.taskList);
+        }
+        catch (InvalidFormat | UnknownCommand e) {
+            return e.getMessage();
+        }
+    }
+
     public static void main(String[] args) {
         Hachiware hachiware = new Hachiware();
 
