@@ -112,4 +112,25 @@ public class TaskList implements Serializable {
         }
         return res;
     }
+
+    /**
+     * Duplicate the TaskList for snapshotting
+     * @return
+     */
+    public TaskList deepCopy() {
+        List<Task> copiedList = new ArrayList<>();
+
+        for (Task t : this.taskList) {
+            copiedList.add(t.deepCopy());
+        }
+
+        return new TaskList(copiedList);
+    }
+
+    public void replaceWith(TaskList other) {
+        this.taskList.clear();
+        for (Task t : other.taskList) {
+            this.taskList.add(t.deepCopy());
+        }
+    }
 }

@@ -12,6 +12,15 @@ public class Deadline extends Task {
         this.by = by;
     }
 
+    public Deadline(String description, boolean isDone, LocalDateTime by) {
+        super(description, isDone);
+        this.by = by;
+    }
+
+    public Deadline deepCopy() {
+        return new Deadline(this.description, this.isDone, this.by);
+    }
+
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + by.format(DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a")) + ")";

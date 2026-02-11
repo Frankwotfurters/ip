@@ -12,7 +12,8 @@ public enum CommandType {
     TODO,
     DEADLINE,
     EVENT,
-    FIND;
+    FIND,
+    UNDO;
 
     /**
      * Method to parse a command input, and return its respective CommandType

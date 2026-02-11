@@ -4,13 +4,17 @@ import java.io.Serializable;
 
 public class Task implements Serializable {
     private static final long serialVersionUID = 1L;
-    protected String command;
     protected String description;
     protected boolean isDone;
 
     public Task(String description) {
         this.description = description;
         this.isDone = false;
+    }
+
+    public Task(String description, boolean isDone) {
+        this.description = description;
+        this.isDone = isDone;
     }
 
     public String getStatusIcon() {
@@ -33,6 +37,10 @@ public class Task implements Serializable {
 
         String res = "Oops! I've unmarked this task:\n" + this.toString();
         return res;
+    }
+    
+    public Task deepCopy() {
+        return new Task(this.description, this.isDone);
     }
 
     @Override

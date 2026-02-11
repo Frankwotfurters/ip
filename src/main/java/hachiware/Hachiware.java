@@ -1,5 +1,6 @@
 package hachiware;
 
+import exception.CannotUndo;
 import exception.InvalidFormat;
 import exception.UnknownCommand;
 import task.TaskList;
@@ -9,9 +10,11 @@ import task.TaskList;
  * to run and receive commands
  */
 public class Hachiware {
+    protected TaskList prevTaskList;
     protected TaskList taskList;
 
     public Hachiware() {
+        this.prevTaskList = new TaskList();
         this.taskList = Storage.fetchSavedTasks();
     }
 
@@ -31,10 +34,8 @@ public class Hachiware {
 
             // Parse command
             try {
-                Parser.parseCommand(command, taskList);
-            } catch (InvalidFormat e) {
-                System.err.println(e.getMessage());
-            } catch (UnknownCommand e) {
+                Parser.parseCommand(command, taskList, prevTaskList);
+            } catch (InvalidFormat | UnknownCommand | CannotUndo e) {
                 System.err.println(e.getMessage());
             } catch (Exception e) {
                 System.err.println("☹️ Something went wrong: " + e.getMessage());
@@ -46,9 +47,9 @@ public class Hachiware {
 
     public String takeSingleCommand(String command) {
         try {
-            return Parser.parseCommand(command, this.taskList);
+            return Parser.parseCommand(command, this.taskList, this.prevTaskList);
         }
-        catch (InvalidFormat | UnknownCommand e) {
+        catch (InvalidFormat | UnknownCommand | CannotUndo e) {
             return e.getMessage();
         }
     }

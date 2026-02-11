@@ -35,6 +35,7 @@ public class Ui {
 
     /*
         * Prints the no tasks found message
+     * @return message to be sent to GUI
         */
     public static String printNotFoundMessage() {
         String res = "No tasks found!";
@@ -44,6 +45,7 @@ public class Ui {
 
     /*
      * Prints a formatting bar
+     * @return message to be sent to GUI
      */
     public static String printBar() {
         String res = "----------------------------";
@@ -53,10 +55,21 @@ public class Ui {
 
     /*
      * Prints the exit message
+     * @return message to be sent to GUI
      */
     public static String printExitMessage() {
         String res = "Bye then!";
         System.out.println(res);
+        return res;
+    }
+    
+    /**
+     * Prints the undo message
+     * @return message to be sent to GUI
+     */
+    public static String printUndoMessage() {
+        String res = "Undid the previous action!";
+        // System.out.println(res);
         return res;
     }
 }

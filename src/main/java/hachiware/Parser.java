@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import exception.CannotUndo;
 import exception.InvalidFormat;
 import exception.UnknownCommand;
 import task.Deadline;
@@ -27,7 +28,8 @@ public class Parser {
      * @throws InvalidFormat if proper syntax of command is not used
      * @throws UnknownCommand if command is not recognized
      */
-    public static String parseCommand(String command, TaskList taskList) throws InvalidFormat, UnknownCommand {
+    public static String parseCommand(String command, TaskList taskList, TaskList prevTaskList)
+    throws InvalidFormat, UnknownCommand, CannotUndo {
         // Parse command type (first word)
         String[] tokens = command.split(" ", 2); // split only on first space
         CommandType type = CommandType.from(tokens[0].toUpperCase());
@@ -37,26 +39,43 @@ public class Parser {
         case LIST:
             response = printTasks(taskList);
             break;
+
         case MARK:
+            prevTaskList.replaceWith(taskList);
             response = handleMark(tokens, taskList);
             break;
+
         case UNMARK:
+            prevTaskList.replaceWith(taskList);
             response = handleUnmark(tokens, taskList);
             break;
+
         case DELETE:
+            prevTaskList.replaceWith(taskList);
             response = handleDelete(tokens, taskList);
             break;
+
         case TODO:
+            prevTaskList.replaceWith(taskList);
             response = handleTodo(tokens, taskList);
             break;
+
         case DEADLINE:
+            prevTaskList.replaceWith(taskList);
             response = handleDeadline(tokens, taskList);
             break;
+
         case EVENT:
+            prevTaskList.replaceWith(taskList);
             response = handleEvent(tokens, taskList);
             break;
+
         case FIND:
             response = handleFind(command, taskList);
+            break;
+
+        case UNDO:
+            response = handleUndo(taskList, prevTaskList);
             break;
         default:
             response = new UnknownCommand().getMessage();
@@ -216,6 +235,17 @@ public class Parser {
         String searchString = parts[1];
 
         return taskList.findTask(searchString);
+    }
+
+    private static String handleUndo(TaskList taskList, TaskList prevTaskList) throws CannotUndo {
+        if (prevTaskList.getSize() == 0) {
+            throw new CannotUndo();
+        }
+
+        taskList.replaceWith(prevTaskList);
+        prevTaskList.replaceWith(new TaskList());
+
+        return Ui.printUndoMessage();
     }
 
     // ---------------- Command Handlers End ----------------
