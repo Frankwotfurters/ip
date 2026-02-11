@@ -76,19 +76,21 @@ public class Parser {
 
         Task tempTask = taskList.getTask(index);
         String res = tempTask.markDone();
+        assert(tempTask.getStatusIcon() == "X");
         Storage.storeTasks(taskList);
-
+        
         return res;
     }
-
+    
     /**
      * Handles unmarking a task.
-     */
-    private static String handleUnmark(String[] tokens, TaskList taskList) throws InvalidFormat {
+    */
+   private static String handleUnmark(String[] tokens, TaskList taskList) throws InvalidFormat {
         int index = parseIndex(tokens, taskList);
-
+        
         Task tempTask = taskList.getTask(index);
         String res = tempTask.markNotDone();
+        assert(tempTask.getStatusIcon() == " ");
         Storage.storeTasks(taskList);
 
         return res;
@@ -98,6 +100,7 @@ public class Parser {
      * Handles deleting a task.
      */
     private static String handleDelete(String[] tokens, TaskList taskList) throws InvalidFormat {
+        // TODO: should throw task not found exception
         int index = parseIndex(tokens, taskList);
 
         String res = taskList.deleteTask(index);
@@ -126,10 +129,6 @@ public class Parser {
      * Handles creating a new Deadline task.
      */
     private static String handleDeadline(String[] tokens, TaskList taskList) throws InvalidFormat {
-        if (tokens.length < 2) {
-            throw new InvalidFormat("Invalid format! Use: deadline [desc] /by [DD/MM/YYYY HHMM]");
-        }
-
         // Parse tokens
         String[] parts = tokens[1].split(" /by ", 2);
         if (parts.length != 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
