@@ -59,7 +59,7 @@ public class Parser {
             response = handleFind(command, taskList);
             break;
         default:
-            response = new UnknownCommand().getMessage();
+            throw new UnknownCommand();
         }
 
         System.out.println(response);
@@ -114,7 +114,8 @@ public class Parser {
      */
     private static String handleTodo(String[] tokens, TaskList taskList) throws InvalidFormat {
         // Ensure description exists
-        if (tokens.length < 2 || tokens[1].trim().isEmpty()) {
+        boolean hasEmptyDesc = tokens[1].trim().isEmpty();
+        if (tokens.length < 2 || hasEmptyDesc) {
             throw new InvalidFormat("Todo description cannot be empty!");
         }
 
@@ -129,58 +130,63 @@ public class Parser {
      * Handles creating a new Deadline task.
      */
     private static String handleDeadline(String[] tokens, TaskList taskList) throws InvalidFormat {
+        final String DEADLINE_DELIMITER = " /by ";
+        LocalDateTime dateTime;
+
         // Parse tokens
-        String[] parts = tokens[1].split(" /by ", 2);
-        if (parts.length != 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
+        String[] parts = tokens[1].split(DEADLINE_DELIMITER, 2);
+        boolean hasEmptyDesc = parts[0].trim().isEmpty();
+        boolean hasEmptyBy = parts[1].trim().isEmpty();
+        if (parts.length != 2 || hasEmptyDesc || hasEmptyBy) {
             throw new InvalidFormat("Invalid format! Use: deadline [desc] /by [DD/MM/YYYY HHMM]");
         }
 
         try {
             // Convert 'by' to LocalDateTime object
-            LocalDateTime dateTime = LocalDateTime.parse(parts[1].trim(), DATE_TIME_INPUT_FORMATTER);
-
-            // Create the Task object
-            Task task = new Deadline(parts[0].trim(), dateTime);
-            String res = taskList.addTask(task);
-            Storage.storeTasks(taskList);
-
-            return res;
-
+             dateTime = LocalDateTime.parse(parts[1].trim(), DATE_TIME_INPUT_FORMATTER);
         } catch (DateTimeParseException e) {
             throw new InvalidFormat("Invalid date/time format! Use DD/MM/YYYY HHMM");
         }
+
+        // Create the Task object
+        Task task = new Deadline(parts[0].trim(), dateTime);
+        String res = taskList.addTask(task);
+        Storage.storeTasks(taskList);
+
+        return res;
     }
 
     /**
      * Handles creating a new Event task.
      */
     private static String handleEvent(String[] tokens, TaskList taskList) throws InvalidFormat {
-        if (tokens.length < 2) {
-            throw new InvalidFormat("Invalid format! Use: event [desc] /from [DD/MM/YYYY HHMM] /to [DD/MM/YYYY HHMM]");
-        }
-
+        final String EVENT_DELIMITER = " /from | /to ";
+        LocalDateTime start, end;
+        
         // Parse tokens
-        String[] parts = tokens[1].split(" /from | /to ", 3);
-        if (parts.length != 3 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty() || parts[2].trim().isEmpty()) {
+        String[] parts = tokens[1].split(EVENT_DELIMITER, 3);
+        boolean hasEmptyDesc = parts[0].trim().isEmpty();
+        boolean hasEmptyFrom = parts[1].trim().isEmpty();
+        boolean hasEmptyTo = parts[2].trim().isEmpty();
+        if (parts.length != 3 || hasEmptyDesc || hasEmptyFrom || hasEmptyTo) {
             throw new InvalidFormat("Invalid format! Use: event [desc] /from [DD/MM/YYYY HHMM] /to [DD/MM/YYYY HHMM]");
         }
 
         try {
             // Convert times to LocalDateTime objects
-            LocalDateTime start = LocalDateTime.parse(parts[1].trim(), DATE_TIME_INPUT_FORMATTER);
-            LocalDateTime end = LocalDateTime.parse(parts[2].trim(), DATE_TIME_INPUT_FORMATTER);
-
-            // Create the Task object
-            Task task = new Event(parts[0].trim(), start, end);
-            String res = taskList.addTask(task);
-            Storage.storeTasks(taskList);
-
-            return res;
-
-
+            start = LocalDateTime.parse(parts[1].trim(), DATE_TIME_INPUT_FORMATTER);
+            end = LocalDateTime.parse(parts[2].trim(), DATE_TIME_INPUT_FORMATTER);
+            
         } catch (DateTimeParseException e) {
             throw new InvalidFormat("Invalid date/time format! Use DD/MM/YYYY HHMM");
         }
+
+        // Create the Task object
+        Task task = new Event(parts[0].trim(), start, end);
+        String res = taskList.addTask(task);
+        Storage.storeTasks(taskList);
+
+        return res;
     }
 
     /**
@@ -191,6 +197,7 @@ public class Parser {
         if (tokens.length != 2) {
             throw new InvalidFormat("Task index missing!");
         }
+
         try {
             int index = Integer.parseInt(tokens[1]) - 1;
             if (index < 0 || index >= taskList.getSize()) {
@@ -211,7 +218,7 @@ public class Parser {
 
     private static String handleFind(String command, TaskList taskList) {
         // Parse tokens
-        String[] parts = command.split("find ", 4);
+        String[] parts = command.split("find ");
         String searchString = parts[1];
 
         return taskList.findTask(searchString);
