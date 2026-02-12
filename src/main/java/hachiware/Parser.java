@@ -76,19 +76,21 @@ public class Parser {
 
         Task tempTask = taskList.getTask(index);
         String res = tempTask.markDone();
+        assert(tempTask.getStatusIcon() == "X");
         Storage.storeTasks(taskList);
-
+        
         return res;
     }
-
+    
     /**
      * Handles unmarking a task.
-     */
-    private static String handleUnmark(String[] tokens, TaskList taskList) throws InvalidFormat {
+    */
+   private static String handleUnmark(String[] tokens, TaskList taskList) throws InvalidFormat {
         int index = parseIndex(tokens, taskList);
-
+        
         Task tempTask = taskList.getTask(index);
         String res = tempTask.markNotDone();
+        assert(tempTask.getStatusIcon() == " ");
         Storage.storeTasks(taskList);
 
         return res;
@@ -98,6 +100,7 @@ public class Parser {
      * Handles deleting a task.
      */
     private static String handleDelete(String[] tokens, TaskList taskList) throws InvalidFormat {
+        // TODO: should throw task not found exception
         int index = parseIndex(tokens, taskList);
 
         String res = taskList.deleteTask(index);
