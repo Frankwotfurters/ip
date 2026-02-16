@@ -10,6 +10,10 @@ public class Todo extends Task {
         super(description, isDone);
     }
 
+    /**
+     * Copies this Todo and returns a new Todo instance
+     * @return a new Todo with the same fields as this
+     */
     public Todo deepCopy() {
         return new Todo(this.description, this.isDone);
     }

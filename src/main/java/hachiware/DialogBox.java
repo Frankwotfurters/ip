@@ -37,10 +37,22 @@ public class DialogBox extends HBox {
         this.getChildren().setAll(tmp);
     }
 
+    /**
+     * Create a new DialogBox for the user UI
+     * @param s
+     * @param i
+     * @return DialogBox UI element
+     */
     public static DialogBox getUserDialog(String s, Image i) {
         return new DialogBox(s, i);
     }
 
+    /**
+     * Create a new DialogBox for the bot's response
+     * @param s
+     * @param i
+     * @return DialogBox UI element
+     */
     public static DialogBox getHachiwareDialog(String s, Image i) {
         var db = new DialogBox(s, i);
         db.flip();

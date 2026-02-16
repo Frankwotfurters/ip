@@ -17,14 +17,26 @@ public class Task implements Serializable {
         this.isDone = isDone;
     }
 
+    /**
+     * Get the icon representation of the task
+     * @return X if task is done, " " if task not done
+     */
     public String getStatusIcon() {
         return (isDone ? "X" : " "); // mark done task with X
     }
 
+    /**
+     * Getter for task description
+     * @return task description
+     */
     public String getDescription() {
         return this.description;
     }
 
+    /**
+     * Marks this task as done
+     * @return bot response message
+     */
     public String markDone() {
         this.isDone = true;
 
@@ -32,6 +44,10 @@ public class Task implements Serializable {
         return res;
     }
     
+    /**
+     * Marks this task as not done
+     * @return bot response message
+     */
     public String markNotDone() {
         this.isDone = false;
 
@@ -39,6 +55,10 @@ public class Task implements Serializable {
         return res;
     }
     
+    /**
+     * Returns a new copy of this task
+     * @return a new Task with the same fields
+     */
     public Task deepCopy() {
         return new Task(this.description, this.isDone);
     }

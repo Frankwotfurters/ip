@@ -1,6 +1,9 @@
 package hachiware;
 
+import java.net.Inet4Address;
+
 import exception.CannotUndo;
+import exception.IndexNotFound;
 import exception.InvalidFormat;
 import exception.UnknownCommand;
 import task.TaskList;
@@ -45,15 +48,24 @@ public class Hachiware {
         }
     }
 
+    /**
+     * Handler to receive commands from GUI 
+     * @param command
+     * @return command output
+     */
     public String takeSingleCommand(String command) {
         try {
             return Parser.parseCommand(command, this.taskList, this.prevTaskList);
         }
-        catch (InvalidFormat | UnknownCommand | CannotUndo e) {
+        catch (InvalidFormat | UnknownCommand | IndexNotFound | CannotUndo e) {
             return e.getMessage();
         }
     }
 
+    /**
+     * Main method to start up the bot
+     * @param args
+     */
     public static void main(String[] args) {
         Hachiware hachiware = new Hachiware();
 

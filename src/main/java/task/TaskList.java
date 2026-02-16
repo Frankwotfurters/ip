@@ -127,6 +127,10 @@ public class TaskList implements Serializable {
         return new TaskList(copiedList);
     }
 
+    /**
+     * Replaces all fields of this taskList with the other input taskList
+     * @param other taskList to replace this taskList
+     */
     public void replaceWith(TaskList other) {
         this.taskList.clear();
         for (Task t : other.taskList) {

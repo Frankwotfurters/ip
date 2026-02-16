@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import exception.CannotUndo;
+import exception.IndexNotFound;
 import exception.InvalidFormat;
 import exception.UnknownCommand;
 import task.Deadline;
@@ -29,7 +30,7 @@ public class Parser {
      * @throws UnknownCommand if command is not recognized
      */
     public static String parseCommand(String command, TaskList taskList, TaskList prevTaskList)
-    throws InvalidFormat, UnknownCommand, CannotUndo {
+    throws InvalidFormat, UnknownCommand, IndexNotFound, CannotUndo {
         // Parse command type (first word)
         String[] tokens = command.split(" ", 2); // split only on first space
         CommandType type = CommandType.from(tokens[0].toUpperCase());
@@ -90,9 +91,13 @@ public class Parser {
     /**
      * Handles marking a task as done.
      */
-    private static String handleMark(String[] tokens, TaskList taskList) throws InvalidFormat {
+    private static String handleMark(String[] tokens, TaskList taskList)
+    throws InvalidFormat, IndexNotFound {
         int index = parseIndex(tokens, taskList);
-
+        if (index > taskList.getSize()) {
+            throw new IndexNotFound(index);
+        }
+        
         Task tempTask = taskList.getTask(index);
         String res = tempTask.markDone();
         assert(tempTask.getStatusIcon() == "X");
@@ -104,23 +109,30 @@ public class Parser {
     /**
      * Handles unmarking a task.
     */
-   private static String handleUnmark(String[] tokens, TaskList taskList) throws InvalidFormat {
-        int index = parseIndex(tokens, taskList);
-        
-        Task tempTask = taskList.getTask(index);
-        String res = tempTask.markNotDone();
-        assert(tempTask.getStatusIcon() == " ");
-        Storage.storeTasks(taskList);
-
-        return res;
+   private static String handleUnmark(String[] tokens, TaskList taskList)
+   throws InvalidFormat, IndexNotFound {
+       int index = parseIndex(tokens, taskList);
+       if (index > taskList.getSize()) {
+           throw new IndexNotFound(index);
+       }
+       
+       Task tempTask = taskList.getTask(index);
+       String res = tempTask.markNotDone();
+       assert(tempTask.getStatusIcon() == " ");
+       Storage.storeTasks(taskList);
+       
+       return res;
     }
-
+    
     /**
      * Handles deleting a task.
-     */
-    private static String handleDelete(String[] tokens, TaskList taskList) throws InvalidFormat {
-        // TODO: should throw task not found exception
-        int index = parseIndex(tokens, taskList);
+    */
+   private static String handleDelete(String[] tokens, TaskList taskList)
+   throws InvalidFormat, IndexNotFound {
+       int index = parseIndex(tokens, taskList);
+       if (index > taskList.getSize()) {
+           throw new IndexNotFound(index);
+       }
 
         String res = taskList.deleteTask(index);
         Storage.storeTasks(taskList);
@@ -235,11 +247,14 @@ public class Parser {
         return taskList.printTasks();
     }
 
-    private static String handleFind(String command, TaskList taskList) {
+    private static String handleFind(String command, TaskList taskList) throws InvalidFormat {
         // Parse tokens
         String[] parts = command.split("find ");
-        String searchString = parts[1];
+        if (parts.length != 2) {
+            throw new InvalidFormat("Invalid Format! Usage: find <string>");
+        }
 
+        String searchString = parts[1];
         return taskList.findTask(searchString);
     }
 
