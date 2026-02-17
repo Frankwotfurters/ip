@@ -17,6 +17,9 @@ public class Deadline extends Task {
         this.by = by;
     }
 
+    /**
+     * Used to create a new DeadLine with the same fields
+     */
     public Deadline deepCopy() {
         return new Deadline(this.description, this.isDone, this.by);
     }

@@ -165,10 +165,19 @@ public class Parser {
         LocalDateTime dateTime;
 
         // Parse tokens
+        if (tokens.length != 2) {
+            throw new InvalidFormat("Invalid format! Use: deadline [desc] /by [DD/MM/YYYY HHMM]");
+        }
+        
         String[] parts = tokens[1].split(DEADLINE_DELIMITER, 2);
+        if (parts.length != 2) {
+            throw new InvalidFormat("Invalid format! Use: deadline [desc] /by [DD/MM/YYYY HHMM]");
+        }
+        
         boolean hasEmptyDesc = parts[0].trim().isEmpty();
         boolean hasEmptyBy = parts[1].trim().isEmpty();
-        if (parts.length != 2 || hasEmptyDesc || hasEmptyBy) {
+        
+        if (hasEmptyDesc || hasEmptyBy) {
             throw new InvalidFormat("Invalid format! Use: deadline [desc] /by [DD/MM/YYYY HHMM]");
         }
 

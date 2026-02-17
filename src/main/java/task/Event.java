@@ -23,6 +23,9 @@ public class Event extends Task {
         this.to = to;
     }
 
+    /**
+     * Used to create a new DeadLine with the same fields
+     */
     public Event deepCopy() {
         return new Event(this.description, this.isDone, this.from, this.to);
     }
