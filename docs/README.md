@@ -113,6 +113,19 @@ Oops! I've unmarked this task:
 [E][ ] class (from: 19 Feb 2026 10:00 am to: 19 Feb 2026 02:00 pm)
 ```
 
+## Find tasks
+
+Searches the list of Tasks to find any matching the provided string
+
+Example: `find eat`
+
+// Lists tasks that contain the string "eat"
+
+```
+1.[T][X] eat grass
+4.[T][ ] eat grass
+```
+
 ## Undo last action
 
 Undoes the last actionable action.

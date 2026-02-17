@@ -102,7 +102,7 @@ public class TaskList implements Serializable {
         for (int i = 0; i < taskList.size(); i++) {
             if (taskList.get(i).getDescription().contains(searchString)) {
                 isFound = true;
-                res += (i + 1) + "." + taskList.get(i);
+                res += (i + 1) + "." + taskList.get(i) + "\n";
             }
         }   
 
