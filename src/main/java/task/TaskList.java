@@ -34,6 +34,9 @@ public class TaskList implements Serializable {
      * Prints each task's string representation
      */
     public String printTasks() {
+        if (taskList.size() == 0) {
+            return "No tasks added yet!";
+        }
         String res = "";
         for (int i = 0; i < taskList.size(); i++) {
             res += (i + 1) + "." + taskList.get(i) + "\n";
