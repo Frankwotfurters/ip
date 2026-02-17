@@ -35,7 +35,7 @@ public class TaskList implements Serializable {
      */
     public String printTasks() {
         if (taskList.size() == 0) {
-            return "No tasks added yet!";
+            return Ui.printNoTasksAddedMessage();
         }
         String res = "";
         for (int i = 0; i < taskList.size(); i++) {

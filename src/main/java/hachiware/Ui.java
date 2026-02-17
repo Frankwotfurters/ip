@@ -39,7 +39,6 @@ public class Ui {
      */
     public static String printNotFoundMessage() {
         String res = "No tasks found!";
-        // System.out.println(res);
         return res;
     }
 
@@ -69,7 +68,14 @@ public class Ui {
      */
     public static String printUndoMessage() {
         String res = "Undid the previous action!";
-        // System.out.println(res);
         return res;
+    }
+
+    /**
+     * Prints message when using list command with empty taskList
+     * @return
+     */
+    public static String printNoTasksAddedMessage() {
+        return "No tasks added yet!";
     }
 }
