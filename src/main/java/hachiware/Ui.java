@@ -33,17 +33,17 @@ public class Ui {
         return command;
     }
 
-    /*
-        * Prints the no tasks found message
+    /**
+     * Prints the no tasks found message
      * @return message to be sent to GUI
-        */
+     */
     public static String printNotFoundMessage() {
         String res = "No tasks found!";
         // System.out.println(res);
         return res;
     }
 
-    /*
+    /**
      * Prints a formatting bar
      * @return message to be sent to GUI
      */

@@ -2,6 +2,9 @@ package task;
 
 import java.io.Serializable;
 
+/**
+ * Class to represent a Task. Mostly not instantiated.
+ */
 public class Task implements Serializable {
     private static final long serialVersionUID = 1L;
     protected String description;
@@ -65,6 +68,6 @@ public class Task implements Serializable {
 
     @Override
     public String toString() {
-        return "[" + (this.isDone? "X":" ") + "] " + this.description;
+        return "[" + (this.isDone ? "X" : " ") + "] " + this.description;
     }
 }

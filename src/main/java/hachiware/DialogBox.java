@@ -50,8 +50,8 @@ public class DialogBox extends HBox {
 
     /**
      * Create a new DialogBox for the user UI
-     * @param s
-     * @param i
+     * @param String text
+     * @param Image img
      * @return DialogBox UI element
      */
     public static DialogBox getUserDialog(String text, Image img) {

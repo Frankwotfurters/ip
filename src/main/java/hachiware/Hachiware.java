@@ -1,7 +1,5 @@
 package hachiware;
 
-import java.net.Inet4Address;
-
 import exception.CannotUndo;
 import exception.IndexNotFound;
 import exception.InvalidFormat;
@@ -56,8 +54,7 @@ public class Hachiware {
     public String takeSingleCommand(String command) {
         try {
             return Parser.parseCommand(command, this.taskList, this.prevTaskList);
-        }
-        catch (InvalidFormat | UnknownCommand | IndexNotFound | CannotUndo e) {
+        } catch (InvalidFormat | UnknownCommand | IndexNotFound | CannotUndo e) {
             return e.getMessage();
         }
     }

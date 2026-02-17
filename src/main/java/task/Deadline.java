@@ -3,6 +3,9 @@ package task;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Class that represents a Deadline, which has a /by field
+ */
 public class Deadline extends Task {
 
     protected LocalDateTime by;
@@ -26,6 +29,7 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + by.format(DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a")) + ")";
+        return "[D]" + super.toString()
+            + " (by: " + by.format(DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a")) + ")";
     }
 }

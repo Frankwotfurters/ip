@@ -30,7 +30,7 @@ public class Parser {
      * @throws UnknownCommand if command is not recognized
      */
     public static String parseCommand(String command, TaskList taskList, TaskList prevTaskList)
-    throws InvalidFormat, UnknownCommand, IndexNotFound, CannotUndo {
+            throws InvalidFormat, UnknownCommand, IndexNotFound, CannotUndo {
         // Parse command type (first word)
         String[] tokens = command.split(" ", 2); // split only on first space
         CommandType type = CommandType.from(tokens[0].toUpperCase());
@@ -92,7 +92,7 @@ public class Parser {
      * Handles marking a task as done.
      */
     private static String handleMark(String[] tokens, TaskList taskList)
-    throws InvalidFormat, IndexNotFound {
+            throws InvalidFormat, IndexNotFound {
         int index = parseIndex(tokens, taskList);
         if (index > taskList.getSize()) {
             throw new IndexNotFound(index);
@@ -108,31 +108,36 @@ public class Parser {
     
     /**
      * Handles unmarking a task.
-    */
-   private static String handleUnmark(String[] tokens, TaskList taskList)
-   throws InvalidFormat, IndexNotFound {
-       int index = parseIndex(tokens, taskList);
-       if (index > taskList.getSize()) {
-           throw new IndexNotFound(index);
-       }
+     * @param tokens
+     * @param taskList
+     * @return
+     * @throws InvalidFormat
+     * @throws IndexNotFound
+     */
+    private static String handleUnmark(String[] tokens, TaskList taskList)
+            throws InvalidFormat, IndexNotFound {
+        int index = parseIndex(tokens, taskList);
+        if (index > taskList.getSize()) {
+            throw new IndexNotFound(index);
+        }
        
-       Task tempTask = taskList.getTask(index);
-       String res = tempTask.markNotDone();
-       assert(tempTask.getStatusIcon() == " ");
-       Storage.storeTasks(taskList);
-       
-       return res;
+        Task tempTask = taskList.getTask(index);
+        String res = tempTask.markNotDone();
+        assert(tempTask.getStatusIcon() == " ");
+        Storage.storeTasks(taskList);
+        
+        return res;
     }
     
     /**
      * Handles deleting a task.
     */
-   private static String handleDelete(String[] tokens, TaskList taskList)
-   throws InvalidFormat, IndexNotFound {
-       int index = parseIndex(tokens, taskList);
-       if (index > taskList.getSize()) {
-           throw new IndexNotFound(index);
-       }
+    private static String handleDelete(String[] tokens, TaskList taskList)
+            throws InvalidFormat, IndexNotFound {
+        int index = parseIndex(tokens, taskList);
+        if (index > taskList.getSize()) {
+            throw new IndexNotFound(index);
+        }
 
         String res = taskList.deleteTask(index);
         Storage.storeTasks(taskList);
@@ -176,14 +181,14 @@ public class Parser {
         
         boolean hasEmptyDesc = parts[0].trim().isEmpty();
         boolean hasEmptyBy = parts[1].trim().isEmpty();
-        
+
         if (hasEmptyDesc || hasEmptyBy) {
             throw new InvalidFormat("Invalid format! Use: deadline [desc] /by [DD/MM/YYYY HHMM]");
         }
 
         try {
             // Convert 'by' to LocalDateTime object
-             dateTime = LocalDateTime.parse(parts[1].trim(), DATE_TIME_INPUT_FORMATTER);
+            dateTime = LocalDateTime.parse(parts[1].trim(), DATE_TIME_INPUT_FORMATTER);
         } catch (DateTimeParseException e) {
             throw new InvalidFormat("Invalid date/time format! Use DD/MM/YYYY HHMM");
         }
@@ -201,7 +206,8 @@ public class Parser {
      */
     private static String handleEvent(String[] tokens, TaskList taskList) throws InvalidFormat {
         final String EVENT_DELIMITER = " /from | /to ";
-        LocalDateTime start, end;
+        LocalDateTime start;
+        LocalDateTime end;
         
         // Parse tokens
         String[] parts = tokens[1].split(EVENT_DELIMITER, 3);
